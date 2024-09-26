@@ -13,7 +13,7 @@ const Cell = function () {
   return { getValue, setValue };
 };
 
-const gameBoard = (function () {
+const gameBoard = function () {
   const board = [[], [], []];
   for (let i = 0; i < 3; i++) {
     for (let j = 0; j < 3; j++) {
@@ -34,7 +34,7 @@ const gameBoard = (function () {
 
   const getBoard = () => board;
   return { printBoard, addMove, getBoard };
-})();
+};
 
 const gameController = (function (player1Name, player2Name) {
   const players = [
@@ -48,6 +48,7 @@ const gameController = (function (player1Name, player2Name) {
     },
   ];
 
+  const board = gameBoard();
   let activePlayer = players[0];
 
   const switchPlayerTurn = () => {
@@ -57,23 +58,23 @@ const gameController = (function (player1Name, player2Name) {
   const getActivePlayer = () => activePlayer;
 
   const printNewRound = () => {
-    gameBoard.printBoard();
+    board.printBoard();
     console.log(`${getActivePlayer().name}'s turn.`);
   };
 
   printNewRound();
 
   const checkWin = (placedRow, placedCol) => {
-    let board = gameBoard
+    let boardValues = board
       .getBoard()
       .map((row) => row.map((col) => col.getValue()));
 
-    const initialValue = board[placedRow][placedCol];
+    const initialValue = boardValues[placedRow][placedCol];
 
     // Check Col
     let counter = 0;
     for (let i = 0; i < 3; i++) {
-      if (board[i][placedCol] === initialValue) {
+      if (boardValues[i][placedCol] === initialValue) {
         counter++;
         if (counter === 3) {
           return true;
@@ -86,7 +87,7 @@ const gameController = (function (player1Name, player2Name) {
     // Check Row
     counter = 0;
     for (let i = 0; i < 3; i++) {
-      if (board[placedRow][i] === initialValue) {
+      if (boardValues[placedRow][i] === initialValue) {
         counter++;
         if (counter === 3) {
           return true;
@@ -100,7 +101,7 @@ const gameController = (function (player1Name, player2Name) {
     counter = 0;
 
     for (let i = 0; i < 3; i++) {
-      if (board[i][i] === initialValue) {
+      if (boardValues[i][i] === initialValue) {
         counter++;
         if (counter === 3) {
           return true;
@@ -109,7 +110,7 @@ const gameController = (function (player1Name, player2Name) {
     }
     counter = 0;
     for (let i = 0; i < 3; i++) {
-      if (board[2 - i][i] === initialValue) {
+      if (boardValues[2 - i][i] === initialValue) {
         counter++;
         if (counter === 3) {
           return true;
@@ -121,10 +122,11 @@ const gameController = (function (player1Name, player2Name) {
   };
 
   const playRound = (row, col) => {
-    gameBoard.addMove(row, col, activePlayer);
+    board.addMove(row, col, activePlayer);
 
     if (checkWin(row, col)) {
-      console.log(`${activePlayer} won the game. GG!`);
+      console.log(`${activePlayer.name} won the game. GG!`);
+      board.printBoard();
       return;
     }
     switchPlayerTurn();
