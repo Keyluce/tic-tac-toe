@@ -36,14 +36,14 @@ const gameBoard = function () {
   return { printBoard, addMove, getBoard };
 };
 
-const gameController = (function (player1Name, player2Name) {
+const gameController = function () {
   const players = [
     {
-      name: player1Name,
+      name: 'Player1',
       symbol: 'X',
     },
     {
-      name: player2Name,
+      name: 'Player2',
       symbol: 'O',
     },
   ];
@@ -133,5 +133,39 @@ const gameController = (function (player1Name, player2Name) {
     printNewRound();
   };
 
-  return { playRound };
-})('Adam Race', 'John Doe');
+  return { playRound, getBoard: board.getBoard };
+};
+
+const displayController = (function () {
+  const game = gameController();
+  const boardDiv = document.querySelector('.board');
+  const player1Name = document.querySelector('.left .player-name');
+  const player2Name = document.querySelector('.right .player-name');
+  const updateUI = function () {
+    boardDiv.textContent = '';
+    const board = game
+      .getBoard()
+      .map((row) => row.map((col) => col.getValue()));
+
+    board.forEach((row, indexRow) =>
+      row.forEach((col, indexCol) => {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        cell.dataset.row = indexRow;
+        cell.dataset.column = indexCol;
+        cell.textContent = col;
+
+        boardDiv.appendChild(cell);
+      })
+    );
+  };
+
+  updateUI();
+
+  boardDiv.addEventListener('click', function (e) {
+    if (e.target.classList.contains('cell')) {
+      game.playRound(e.target.dataset.row, e.target.dataset.column);
+      updateUI();
+    }
+  });
+})();

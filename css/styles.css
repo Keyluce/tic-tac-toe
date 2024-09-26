@@ -13,19 +13,76 @@ body {
 }
 
 .container {
-  max-width: 1100px;
+  /* max-width: 1100px;
   margin: 0 auto;
+  min-height: 100vh; */
+  display: flex;
   min-height: 100vh;
 }
+.container section {
+  flex: 1;
+}
+.container section {
+  align-content: center;
+  text-align: center;
+}
+.container section .player-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 50%;
+}
+.container section.left .player-box .player-name {
+  color: rgb(255, 183, 49);
+  font-size: 2.2rem;
+}
+.container section.right .player-box .player-name {
+  color: rgb(68, 208, 255);
+  font-size: 2.2rem;
+}
+.container section .player-box .turn-message.active {
+  color: rgb(134, 255, 169);
+  font-size: 2rem;
+  background-color: rgb(44, 44, 44);
+  width: 50%;
+  padding: 1rem;
+  border-radius: 10%;
+  margin: 0 auto;
+}
+.container section.left .player-box .symbol {
+  font-size: 5rem;
+  color: rgb(255, 185, 55);
+}
+.container section.right .player-box .symbol {
+  font-size: 5rem;
+  color: rgb(68, 208, 255);
+}
+
 .header-div {
   text-align: center;
   margin-top: 25px;
+  font-size: 1.5rem;
+  color: rgb(253, 211, 255);
 }
 .container .board {
   border: 5px solid rgb(239, 200, 255);
   border-radius: 5%;
-  width: 50%;
-  margin: 0 auto;
+  width: 100%;
   margin-top: 25px;
   height: 70vh;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+}
+
+.board .cell {
+  outline: 1px solid purple;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 5rem;
+  color: white;
+}
+.board .cell.corner {
+  outline: none;
 }
