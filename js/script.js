@@ -181,7 +181,7 @@ const displayController = (function () {
 
     board.forEach((row, indexRow) =>
       row.forEach((col, indexCol) => {
-        const cell = document.createElement('div');
+        const cell = document.createElement('button');
         cell.classList.add('cell');
         cell.dataset.row = indexRow;
         cell.dataset.column = indexCol;

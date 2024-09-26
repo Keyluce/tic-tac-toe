@@ -12,6 +12,10 @@ body {
   color: white;
 }
 
+button {
+  background: none;
+  border: none;
+}
 .container {
   /* max-width: 1100px;
   margin: 0 auto;
