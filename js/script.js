@@ -14,12 +14,16 @@ const Cell = function () {
 };
 
 const gameBoard = function () {
-  const board = [[], [], []];
-  for (let i = 0; i < 3; i++) {
-    for (let j = 0; j < 3; j++) {
-      board[i].push(Cell());
+  const initBoard = () => {
+    board = [[], [], []];
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        board[i].push(Cell());
+      }
     }
-  }
+  };
+  let board = [[], [], []];
+  initBoard();
 
   const printBoard = function () {
     const boardToPrint = board.map((row) => row.map((col) => col.getValue()));
@@ -29,11 +33,14 @@ const gameBoard = function () {
   const addMove = function (row, col, player) {
     if (board[row][col].getValue() == '') {
       board[row][col].setValue(player.symbol);
+    } else {
+      return false;
     }
   };
 
   const getBoard = () => board;
-  return { printBoard, addMove, getBoard };
+
+  return { printBoard, addMove, getBoard, initBoard };
 };
 
 const gameController = function () {
@@ -122,27 +129,52 @@ const gameController = function () {
   };
 
   const playRound = (row, col) => {
-    board.addMove(row, col, activePlayer);
+    if (board.addMove(row, col, activePlayer) === false) return;
 
     if (checkWin(row, col)) {
       console.log(`${activePlayer.name} won the game. GG!`);
       board.printBoard();
+      resetGame();
+
       return;
     }
     switchPlayerTurn();
     printNewRound();
   };
 
-  return { playRound, getBoard: board.getBoard };
+  const resetGame = function () {
+    board.initBoard();
+    activePlayer = players[0];
+  };
+  return { playRound, getBoard: board.getBoard, getActivePlayer };
 };
 
 const displayController = (function () {
   const game = gameController();
   const boardDiv = document.querySelector('.board');
+  const player1Side = document.querySelector('.left');
+  const player2Side = document.querySelector('.right');
   const player1Name = document.querySelector('.left .player-name');
+  const player1Status = document.querySelector('.left .turn-message');
+  const player2Status = document.querySelector('.right .turn-message');
   const player2Name = document.querySelector('.right .player-name');
   const updateUI = function () {
     boardDiv.textContent = '';
+    console.log(game.getActivePlayer().symbol);
+    // game.getActivePlayer().symbol === 'X'
+    //   ? player1Status.classList.toggle('active')
+    //   : player2Status.classList.toggle('active');
+    if (game.getActivePlayer().symbol === 'X') {
+      player1Status.classList.add('active');
+      player2Status.classList.remove('active');
+      player1Status.textContent = 'Your Turn';
+      player2Status.textContent = 'Please Wait';
+    } else {
+      player2Status.classList.add('active');
+      player1Status.classList.remove('active');
+      player1Status.textContent = 'Please Wait';
+      player2Status.textContent = 'Your Turn';
+    }
     const board = game
       .getBoard()
       .map((row) => row.map((col) => col.getValue()));
@@ -154,6 +186,9 @@ const displayController = (function () {
         cell.dataset.row = indexRow;
         cell.dataset.column = indexCol;
         cell.textContent = col;
+        col === 'X'
+          ? (cell.style.color = 'orange')
+          : (cell.style.color = 'blue');
 
         boardDiv.appendChild(cell);
       })
