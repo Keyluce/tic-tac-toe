@@ -248,6 +248,8 @@ const displayController = (function () {
       } else if (result === 'draw') {
         player1Status.textContent = "It's a tie!";
         player2Status.textContent = "It's a tie!";
+        player1Status.classList.add('active');
+        player2Status.classList.add('active');
         game = null;
       }
     }
