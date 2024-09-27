@@ -14,16 +14,12 @@ const Cell = function () {
 };
 
 const gameBoard = function () {
-  const initBoard = () => {
-    board = [[], [], []];
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 3; j++) {
-        board[i].push(Cell());
-      }
+  board = [[], [], []];
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 3; j++) {
+      board[i].push(Cell());
     }
-  };
-  let board = [[], [], []];
-  initBoard();
+  }
 
   const printBoard = function () {
     const boardToPrint = board.map((row) => row.map((col) => col.getValue()));
@@ -40,7 +36,7 @@ const gameBoard = function () {
 
   const getBoard = () => board;
 
-  return { printBoard, addMove, getBoard, initBoard };
+  return { printBoard, addMove, getBoard };
 };
 
 const gameController = function () {
@@ -139,13 +135,13 @@ const gameController = function () {
       console.log(`${activePlayer.name} won the game. GG!`);
       board.printBoard();
       hasWon = true;
-      return;
+      return activePlayer.symbol;
     }
     switchPlayerTurn();
     printNewRound();
   };
 
-  return { playRound, getBoard: board.getBoard, getActivePlayer, hasWon };
+  return { playRound, getBoard: board.getBoard, getActivePlayer };
 };
 
 const displayController = (function () {
@@ -196,8 +192,8 @@ const displayController = (function () {
         cell.dataset.column = indexCol;
         cell.textContent = col;
         col === 'X'
-          ? (cell.style.color = 'orange')
-          : (cell.style.color = 'blue');
+          ? (cell.style.color = 'rgb(255, 183, 49')
+          : (cell.style.color = 'rgb(68, 208, 255)');
 
         boardDiv.appendChild(cell);
       })
@@ -216,8 +212,20 @@ const displayController = (function () {
   startButton.addEventListener('click', init);
   boardDiv.addEventListener('click', function (e) {
     if (e.target.classList.contains('cell') && game) {
-      game.playRound(e.target.dataset.row, e.target.dataset.column);
+      const result = game.playRound(
+        e.target.dataset.row,
+        e.target.dataset.column
+      );
       updateUI();
+      if (result === 'X') {
+        player1Status.textContent = 'You Won!';
+        player2Status.textContent = 'You Lost';
+        game = null;
+      } else if (result === 'Y') {
+        player2Status.textContent = 'You Won!';
+        player1Status.textContent = 'You Lose';
+        game = null;
+      }
     }
   });
 })();
