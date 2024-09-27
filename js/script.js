@@ -164,6 +164,8 @@ const displayController = (function () {
   const player1Status = document.querySelector('.left .turn-message');
   const player2Status = document.querySelector('.right .turn-message');
   const player2Name = document.querySelector('.right .player-name');
+  const player1Input = document.querySelector('#player1-name');
+  const player2Input = document.querySelector('#player2-name');
   const updateUI = function () {
     if (!game) return;
 
@@ -211,7 +213,13 @@ const displayController = (function () {
   };
   const init = function () {
     game = gameController();
-
+    player1Name.textContent =
+      player1Input.value.trim() === '' ? 'Player 1' : player1Input.value;
+    player2Name.textContent =
+      player2Input.value.trim() === '' ? 'Player 2' : player2Input.value;
+    player1Input.style.display = 'none';
+    player2Input.style.display = 'none';
+    startButton.textContent = 'Restart';
     player1Status.textContent = 'Your Turn!';
     player1Status.classList.add('active');
     player2Status.textContent = 'Please Wait';
