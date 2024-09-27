@@ -220,6 +220,7 @@ const displayController = (function () {
     boardRefresh();
   };
   startButton.addEventListener('click', init);
+
   boardDiv.addEventListener('click', function (e) {
     if (e.target.classList.contains('cell') && game) {
       const result = game.playRound(
@@ -234,7 +235,7 @@ const displayController = (function () {
         game = null;
       } else if (result === 'O') {
         player2Status.textContent = 'You Won!';
-        player1Status.textContent = 'You Lose';
+        player1Status.textContent = 'You Lost';
         game = null;
       } else if (result === 'draw') {
         player1Status.textContent = "It's a tie!";
@@ -243,4 +244,29 @@ const displayController = (function () {
       }
     }
   });
+
+  boardDiv.addEventListener(
+    'mouseenter',
+    function (e) {
+      if (game) {
+        if (e.target.classList.contains('cell')) {
+          game.getActivePlayer().symbol === 'X'
+            ? (e.target.style.backgroundColor = 'rgba(255, 183, 49,0.1')
+            : (e.target.style.backgroundColor = 'rgba(68, 208, 255,0.1)');
+        }
+      }
+    },
+    true
+  );
+  boardDiv.addEventListener(
+    'mouseleave',
+    function (e) {
+      if (game) {
+        if (e.target.classList.contains('cell')) {
+          e.target.style.backgroundColor = '';
+        }
+      }
+    },
+    true
+  );
 })();

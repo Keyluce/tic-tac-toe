@@ -112,6 +112,10 @@ button {
   font-size: 5rem;
   color: white;
 }
+.board .cell:active {
+  transform: scale(0.9);
+  outline: none;
+}
 .board .cell.corner {
   outline: none;
 }
