@@ -44,6 +44,7 @@ const gameBoard = function () {
 };
 
 const gameController = function () {
+  let hasWon = false;
   const players = [
     {
       name: 'Player1',
@@ -129,29 +130,28 @@ const gameController = function () {
   };
 
   const playRound = (row, col) => {
+    if (hasWon) {
+      return;
+    }
     if (board.addMove(row, col, activePlayer) === false) return;
 
     if (checkWin(row, col)) {
       console.log(`${activePlayer.name} won the game. GG!`);
       board.printBoard();
-      resetGame();
-
+      hasWon = true;
       return;
     }
     switchPlayerTurn();
     printNewRound();
   };
 
-  const resetGame = function () {
-    board.initBoard();
-    activePlayer = players[0];
-  };
-  return { playRound, getBoard: board.getBoard, getActivePlayer };
+  return { playRound, getBoard: board.getBoard, getActivePlayer, hasWon };
 };
 
 const displayController = (function () {
-  const game = gameController();
+  let game = null;
   const boardDiv = document.querySelector('.board');
+  const startButton = document.querySelector('.start-button');
   const player1Side = document.querySelector('.left');
   const player2Side = document.querySelector('.right');
   const player1Name = document.querySelector('.left .player-name');
@@ -159,6 +159,8 @@ const displayController = (function () {
   const player2Status = document.querySelector('.right .turn-message');
   const player2Name = document.querySelector('.right .player-name');
   const updateUI = function () {
+    if (!game) return;
+
     boardDiv.textContent = '';
     console.log(game.getActivePlayer().symbol);
     // game.getActivePlayer().symbol === 'X'
@@ -175,6 +177,13 @@ const displayController = (function () {
       player1Status.textContent = 'Please Wait';
       player2Status.textContent = 'Your Turn';
     }
+    boardRefresh();
+  };
+
+  updateUI();
+  const boardRefresh = () => {
+    boardDiv.textContent = '';
+
     const board = game
       .getBoard()
       .map((row) => row.map((col) => col.getValue()));
@@ -194,11 +203,19 @@ const displayController = (function () {
       })
     );
   };
+  const init = function () {
+    game = gameController();
 
-  updateUI();
+    player1Status.textContent = 'Your Turn!';
+    player1Status.classList.add('active');
+    player2Status.textContent = 'Please Wait';
+    player2Status.classList.remove('active');
 
+    boardRefresh();
+  };
+  startButton.addEventListener('click', init);
   boardDiv.addEventListener('click', function (e) {
-    if (e.target.classList.contains('cell')) {
+    if (e.target.classList.contains('cell') && game) {
       game.playRound(e.target.dataset.row, e.target.dataset.column);
       updateUI();
     }

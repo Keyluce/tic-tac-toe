@@ -26,9 +26,13 @@ button {
 .container section {
   flex: 1;
 }
-.container section {
+.container section.left,
+.container section.right {
   align-content: center;
   text-align: center;
+}
+.container section.middle {
+  margin-top: 40px;
 }
 .container section .player-box {
   display: flex;
@@ -61,10 +65,31 @@ button {
   font-size: 5rem;
   color: rgb(68, 208, 255);
 }
+.container section.middle .button-container {
+  margin-top: 1rem;
+  text-align: center;
+}
+.container section.middle .start-button {
+  color: black;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 1.3rem 2rem;
+  background-color: pink;
+  border: 2px solid white;
+  border-radius: 4px;
+  box-shadow: 0px 0px rgba(255, 255, 255, 0.1);
+}
+.container section.middle .start-button:hover {
+  opacity: 0.9;
+}
+.container section.middle .start-button:active {
+  transform: scale(0.95);
+  /* background-color: red; */
+}
 
 .header-div {
   text-align: center;
-  margin-top: 25px;
   font-size: 1.5rem;
   color: rgb(253, 211, 255);
 }
