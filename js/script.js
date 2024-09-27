@@ -40,6 +40,7 @@ const gameBoard = function () {
 };
 
 const gameController = function () {
+  let moveCounter = 0;
   let hasWon = false;
   const players = [
     {
@@ -124,18 +125,27 @@ const gameController = function () {
 
     return false;
   };
-
+  const checkDraw = () => {
+    if (moveCounter >= 9) {
+      return true;
+    }
+  };
   const playRound = (row, col) => {
     if (hasWon) {
       return;
     }
+
     if (board.addMove(row, col, activePlayer) === false) return;
+    moveCounter++;
 
     if (checkWin(row, col)) {
       console.log(`${activePlayer.name} won the game. GG!`);
       board.printBoard();
       hasWon = true;
       return activePlayer.symbol;
+    }
+    if (checkDraw()) {
+      return 'draw';
     }
     switchPlayerTurn();
     printNewRound();
@@ -217,13 +227,18 @@ const displayController = (function () {
         e.target.dataset.column
       );
       updateUI();
+      console.log(result);
       if (result === 'X') {
         player1Status.textContent = 'You Won!';
         player2Status.textContent = 'You Lost';
         game = null;
-      } else if (result === 'Y') {
+      } else if (result === 'O') {
         player2Status.textContent = 'You Won!';
         player1Status.textContent = 'You Lose';
+        game = null;
+      } else if (result === 'draw') {
+        player1Status.textContent = "It's a tie!";
+        player2Status.textContent = "It's a tie!";
         game = null;
       }
     }
