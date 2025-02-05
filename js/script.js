@@ -1,19 +1,18 @@
-const Cell = function () {
-  let value = '';
-  const getValue = function () {
-    return value;
-  };
-  const setValue = function (valueP) {
-    if (valueP != 'X' && valueP != 'O') {
-      return;
-    }
-    value = valueP;
-  };
-
-  return { getValue, setValue };
-};
-
 const gameBoard = function () {
+  const Cell = function () {
+    let value = '';
+    const getValue = function () {
+      return value;
+    };
+    const setValue = function (valueP) {
+      if (valueP != 'X' && valueP != 'O') { //Functionality that prevents the user from setting a value other than 'X' or 'O'
+        return;
+      }
+      value = valueP;
+    };
+  
+    return { getValue, setValue };
+  };
   board = [[], [], []];
   for (let i = 0; i < 3; i++) {
     for (let j = 0; j < 3; j++) {
